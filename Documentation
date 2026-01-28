@@ -1,0 +1,25 @@
+A. Project Overview
+Problem Statement: Financial institutions need real-time fraud detection that adapts to evolving fraud patterns while maintaining low false positive rates and high throughput.
+
+Real-World Use Case: A payment processor needs to screen 10,000+ transactions per second, flagging suspicious activity with <1% false positives and <50ms latency.
+
+Target Users: Payment processors, banks, e-commerce platforms, fintech developers.
+
+B. Tech Stack
+Language: Python 3.9+
+
+ML Framework: Scikit-learn, XGBoost, LightGBM
+
+Deep Learning: PyTorch (for neural network models)
+
+Feature Store: Feast
+
+Model Serving: FastAPI, Ray Serve
+
+Monitoring: MLflow, Evidently AI
+
+Data Processing: Apache Spark (PySpark), Pandas
+
+Database: PostgreSQL (for metadata), Redis (for caching)
+
+Tools: Docker, Airflow, DVC, Git LFS
