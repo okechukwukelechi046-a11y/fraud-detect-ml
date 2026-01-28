@@ -1,0 +1,35 @@
+# 1. Clone repository
+git clone https://github.com/okechukwukelechi046-a11y/fraud-detect-ml.git
+cd fraud-detect-ml
+
+# 2. Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+
+# 4. Set up environment variables
+cp .env.example .env
+# Edit .env with your configuration
+
+# 5. Start infrastructure with Docker
+docker-compose up -d redis mlflow postgres
+
+# 6. Initialize feature store
+feast apply -c feature_repo/
+
+# 7. Run training pipeline (optional)
+python -m src.models.training_pipeline
+
+# 8. Start model server
+python -m src.serving.model_server
+
+# 9. Run tests
+pytest tests/ -v
+
+# 10. Access services
+# Model Server: http://localhost:8000
+# MLflow UI: http://localhost:5000
+# API Docs: http://localhost:8000/docs
