@@ -1,0 +1,48 @@
+Transaction data streams through Kafka
+
+Real-time feature engineering pipeline
+
+Features fetched from Feast feature store
+
+Multiple models score transaction in parallel
+
+Ensemble decision with business rules
+
+Results cached, alerts generated, feedback loop
+
+Folder Structure:
+
+fraud-detect-ml/
+├── data/
+│   ├── raw/           # Raw datasets
+│   ├── processed/     # Processed features
+│   └── external/      # External data sources
+├── src/
+│   ├── data/          # Data processing modules
+│   ├── features/      # Feature engineering
+│   ├── models/        # Model definitions & training
+│   ├── serving/       # Model serving API
+│   ├── monitoring/    # Model monitoring
+│   └── utils/         # Utilities
+├── notebooks/         # Exploratory analysis
+├── tests/            # Unit & integration tests
+├── deployment/       # Docker, k8s configs
+└── pipelines/        # Training & batch pipelines
+
+Core Features
+
+Real-time Inference (<50ms latency)
+
+Model Ensemble (XGBoost, LightGBM, Neural Network)
+
+Feature Store (Feast for consistency)
+
+A/B Testing framework for model deployment
+
+Concept Drift Detection
+
+Explainable AI (SHAP, LIME)
+
+Feedback Loop for continuous learning
+
+Performance Monitoring dashboard
