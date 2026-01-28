@@ -1,0 +1,37 @@
+Training Pipeline
+
+# Run full training pipeline
+python -m src.models.training_pipeline
+
+# Or run individual steps:
+python -m src.data.make_dataset           # Data preparation
+python -m src.features.build_features     # Feature engineering
+python -m src.models.train_model          # Model training
+python -m src.models.evaluate_model       # Evaluation
+
+Hyperparameter Optimization
+
+# Run hyperparameter search with Optuna
+python -m src.models.hyperparameter_tuning \
+  --n_trials 100 \
+  --study_name fraud_optimization
+
+Monitoring & Observability
+The system includes comprehensive monitoring:
+
+Model Performance - Accuracy, precision, recall, AUC
+
+Data Drift - Feature distribution changes
+
+Prediction Drift - Score distribution monitoring
+
+Service Metrics - Latency, throughput, error rates
+
+Business Metrics - Fraud capture rate, false positives
+
+Access dashboards at:
+
+Grafana: http://localhost:3000
+
+MLflow: http://localhost:5000
+
