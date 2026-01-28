@@ -1,0 +1,24 @@
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Start infrastructure
+docker-compose up -d redis mlflow
+
+# 3. Train models (optional)
+python -m src.models.training_pipeline
+
+# 4. Start model server
+python -m src.serving.model_server
+
+# 5. Test API
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transaction_id": "test_001",
+    "user_id": "user_001",
+    "amount": 150.75,
+    "currency": "USD",
+    "merchant_id": "merchant_001",
+    "merchant_category": "5411",
+    "transaction_time": "2024-01-15T14:30:00Z"
+  }'
