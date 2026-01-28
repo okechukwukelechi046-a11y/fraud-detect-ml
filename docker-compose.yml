@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: fraud_redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - fraud_network
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    container_name: fraud_mlflow
+    command: mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./artifacts --host 0.0.0.0
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow_data:/mlflow
+    networks:
+      - fraud_network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: fraud_postgres
+    environment:
+      POSTGRES_DB: fraud_db
+      POSTGRES_USER: fraud_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fraud_network
+
+  model_server:
+    build: .
+    container_name: fraud_model_server
+    environment:
+      REDIS_URL: redis://redis:6379
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+      FEATURE_STORE_PATH: ./feature_repo
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - mlflow
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+    networks:
+      - fraud_network
+    restart: unless-stopped
+
+  monitoring:
+    image: grafana/grafana:latest
+    container_name: fraud_monitoring
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deployment/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+    networks:
+      - fraud_network
+
+volumes:
+  redis_data:
+  mlflow_data:
+  postgres_data:
+  grafana_data:
+
+networks:
+  fraud_network:
+    driver: bridge
