@@ -1,0 +1,34 @@
+Kubernetes
+
+# Deploy to Kubernetes cluster
+kubectl apply -f deployment/kubernetes/
+
+# Check deployment status
+kubectl get pods -n fraud-detection
+kubectl get services -n fraud-detection
+
+AWS SageMaker
+
+# Deploy as SageMaker endpoint
+python deployment/sagemaker/deploy.py \
+  --model-path s3://your-bucket/models/ \
+  --instance-type ml.m5.xlarge \
+  --endpoint-name fraud-detection-endpoint
+
+
+Project Structure
+
+fraud-detect-ml/
+├── data/               # Datasets and feature store
+├── src/               # Source code
+│   ├── data/          # Data loading and processing
+│   ├── features/      # Feature engineering
+│   ├── models/        # Model training and evaluation
+│   ├── serving/       # Model serving API
+│   ├── monitoring/    # Monitoring and drift detection
+│   └── utils/         # Utility functions
+├── tests/             # Test suites
+├── notebooks/         # Exploratory analysis
+├── deployment/        # Deployment configurations
+├── feature_repo/      # Feast feature store definitions
+└── models/            # Trained model artifacts
