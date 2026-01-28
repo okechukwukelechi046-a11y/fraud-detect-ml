@@ -1,0 +1,5 @@
+Real-time Stream → Feature Pipeline → Online Store → Model Server → Decision Engine
+      ↑                    ↓              ↓              ↓             ↓
+   Kafka           Batch Pipeline     Feast         MLflow       Redis Cache
+      ↓                    ↓              ↓              ↓             ↓
+Data Lake (S3) → Training Pipeline → Model Registry → Monitoring → Alert System
