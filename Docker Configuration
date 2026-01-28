@@ -1,0 +1,59 @@
+Dockerfile
+
+# Multi-stage build for production
+FROM python:3.9-slim AS builder
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+COPY requirements-dev.txt .
+
+# Install Python dependencies
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Copy application
+COPY src/ ./src/
+COPY feature_repo/ ./feature_repo/
+COPY models/ ./models/
+COPY data/processed/ ./data/processed/
+
+# Production stage
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python dependencies from builder
+COPY --from=builder /root/.local /root/.local
+
+# Copy application
+COPY --from=builder /app .
+
+# Create non-root user
+RUN useradd --create-home appuser
+USER appuser
+
+# Add .local/bin to PATH
+ENV PATH=/home/appuser/.local/bin:$PATH
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Run application
+CMD ["python", "-m", "src.serving.model_server"]
