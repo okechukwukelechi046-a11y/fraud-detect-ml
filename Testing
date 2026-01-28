@@ -1,0 +1,13 @@
+# Run all tests
+pytest tests/ -v
+
+# Run with coverage
+pytest --cov=src tests/
+
+# Run specific test categories
+pytest tests/unit/ -v
+pytest tests/integration/ -v
+pytest tests/e2e/ -v
+
+# Run performance tests
+python tests/performance/test_latency.py
